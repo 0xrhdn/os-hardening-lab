@@ -1,0 +1,19 @@
+services:
+  target:
+    build: .
+    container_name: os-hardening-target
+    hostname: debian12-hardening-lab
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    ports:
+      - "127.0.0.1:2222:22"
+      - "127.0.0.1:8080:80"
+      - "127.0.0.1:2121:21"
+      - "127.0.0.1:13306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    restart: unless-stopped
+volumes:
+  mariadb-data:
