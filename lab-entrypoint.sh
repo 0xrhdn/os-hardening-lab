@@ -66,13 +66,16 @@ chmod 4755 /opt/backdoor/maintenance.sh
 if [ ! -d /var/lib/mysql/mysql ]; then mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null; fi
 mysqld_safe --datadir=/var/lib/mysql --bind-address=0.0.0.0 >/tmp/mariadb.log 2>&1 &
 for i in $(seq 1 30); do mariadb-admin ping >/dev/null 2>&1 && break || sleep 1; done
-mariadb -uroot <<'SQL'
+if [ ! -f /var/lib/mysql/.lab-initialized ]; then
+  mariadb -uroot <<'SQL'
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'MariaRoot!2026';
 CREATE DATABASE IF NOT EXISTS labdb;
 CREATE USER IF NOT EXISTS 'labapp'@'localhost' IDENTIFIED BY 'LabApp!2026';
 GRANT ALL ON labdb.* TO 'labapp'@'localhost';
 FLUSH PRIVILEGES;
 SQL
+  touch /var/lib/mysql/.lab-initialized
+fi
 sed -i 's/^;\?display_errors\s*=.*/display_errors = On/' /etc/php/8.2/fpm/php.ini
 php-fpm8.2 -D
 nginx
