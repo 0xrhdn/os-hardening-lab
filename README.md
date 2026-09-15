@@ -71,3 +71,32 @@ Untuk menghapus data database dan state volume:
 ```bash
 docker compose down -v
 ```
+
+## Launcher satu perintah
+
+Agar tidak perlu mengetik perintah Docker satu per satu, gunakan launcher:
+
+```bash
+chmod +x lab.sh
+./lab.sh start
+```
+
+Perintah yang tersedia:
+
+```bash
+./lab.sh start       # build dan jalankan lab
+./lab.sh shell       # masuk ke target
+./lab.sh progress    # tampilkan jumlah dan persentase check yang lulus
+./lab.sh status      # lihat status container
+./lab.sh logs        # lihat log target
+./lab.sh stop        # hentikan lab tanpa menghapus data
+./lab.sh reset       # hapus data dan mulai dari awal
+```
+
+Setelah menjalankan `./lab.sh shell`, kerjakan tugas. Buka terminal kedua atau keluar dari target dengan `exit`, lalu jalankan:
+
+```bash
+./lab.sh progress
+```
+
+Progress tracker membaca konfigurasi aktual target, sehingga persentase berubah setelah hardening berhasil. Perintah `reset` meminta konfirmasi dengan mengetik `RESET` dan menghapus progres lab.
